@@ -30,13 +30,13 @@ tasks:
     desc: Run no-machine e2e integration tests (macOS; no OrbStack required)
     deps: ["build:cli"]
     dir: e2e
-    cmd: go test -v -ginkgo.v -timeout 3600s --ginkgo.label-filter=integration
+    cmd: go test -tags=e2e -v -ginkgo.v -timeout 3600s --ginkgo.label-filter=integration
 
   test:e2e:vm:
     desc: Run full machine-lifecycle e2e tests (requires OrbStack)
     deps: ["build:cli"]
     dir: e2e
-    cmd: go test -v -ginkgo.v -timeout 3600s --ginkgo.label-filter=vm
+    cmd: go test -tags=e2e -v -ginkgo.v -timeout 3600s --ginkgo.label-filter=vm
 
   lint:
     desc: Run go vet

@@ -1,6 +1,8 @@
 package integration
 
 import (
+	"crypto/rand"
+	"encoding/hex"
 	"fmt"
 	"io"
 	"net/http"
@@ -15,6 +17,15 @@ import (
 	"github.com/onsi/ginkgo/v2"
 	"github.com/onsi/gomega"
 )
+
+// uniqueWorkspaceID returns a per-run workspace ID so the vm suite never
+// collides with or deletes a workspace a developer already has.
+func uniqueWorkspaceID() string {
+	b := make([]byte, 4)
+	_, err := rand.Read(b)
+	framework.ExpectNoError(err)
+	return "devsy-orbstack-e2e-" + hex.EncodeToString(b)
+}
 
 func providerBinary() string {
 	archDir := map[string]string{"amd64": "amd64_v1", "arm64": "arm64_v8.0"}[goruntime.GOARCH]
@@ -54,8 +65,8 @@ func setupDevsyCLI() {
 	)
 	resp, err := client.Get(url) //nolint:gosec // fixed release URL
 	framework.ExpectNoError(err)
-	framework.ExpectEqual(resp.StatusCode, http.StatusOK)
 	defer func() { _ = resp.Body.Close() }()
+	framework.ExpectEqual(resp.StatusCode, http.StatusOK)
 
 	framework.ExpectNoError(os.MkdirAll("bin", 0o750))
 	binPath := filepath.Join("bin", "devsy")
@@ -64,6 +75,7 @@ func setupDevsyCLI() {
 	framework.ExpectNoError(err)
 	_, err = io.Copy(out, resp.Body)
 	framework.ExpectNoError(err)
+	// Close before exec: running a file still open for write triggers ETXTBSY.
 	framework.ExpectNoError(out.Close())
 	framework.ExpectNoError(exec.Command(binPath, "--version").Run()) //nolint:gosec // fixed path
 }
@@ -95,7 +107,9 @@ var _ = ginkgo.Describe(
 		ginkgo.It("should fail init when orbctl is missing", func() {
 			cmd := exec.Command(providerBinary(), "init") //nolint:gosec // built provider path
 			cmd.Env = append(cmd.Environ(), "ORBSTACK_PATH=/nonexistent/orbctl")
-			framework.ExpectError(cmd.Run())
+			output, err := cmd.CombinedOutput()
+			framework.ExpectError(err)
+			gomega.Expect(string(output)).To(gomega.ContainSubstring("orbctl not found"))
 		})
 
 		ginkgo.It("should fail create without a machine id", func() {
@@ -113,9 +127,10 @@ var _ = ginkgo.Describe(
 	ginkgo.Label("vm"),
 	ginkgo.Ordered,
 	func() {
-		const workspaceID = "devsy-provider-orbstack"
+		var workspaceID string
 
 		ginkgo.BeforeAll(func() {
+			workspaceID = uniqueWorkspaceID()
 			isolateDevsyHome()
 			setupProvider()
 			setupDevsyCLI()
@@ -123,16 +138,19 @@ var _ = ginkgo.Describe(
 				"--name", "orbstack", "-o", "ORBSTACK_CPUS=2", "-o", "ORBSTACK_MEMORY=4G"))
 
 			ginkgo.DeferCleanup(func() {
+				//nolint:gosec // fixed devsy binary; test-controlled args
 				_ = exec.Command("bin/devsy", "workspace", "delete", "--force", workspaceID).Run()
 			})
 		})
 
 		ginkgo.It("should bring up a workspace on an OrbStack machine", func() {
+			//nolint:gosec // fixed devsy binary; test-controlled args
 			mustRun(exec.Command("bin/devsy", "workspace", "up", "--ide=none",
 				"--id", workspaceID, "--provider", "orbstack", "fixtures/workspace"))
 		})
 
 		ginkgo.It("should run a command in the workspace", func() {
+			//nolint:gosec // fixed devsy binary; test-controlled args
 			cmd := exec.Command(
 				"bin/devsy",
 				"workspace",
@@ -147,6 +165,7 @@ var _ = ginkgo.Describe(
 		})
 
 		ginkgo.It("should delete the workspace", func() {
+			//nolint:gosec // fixed devsy binary; test-controlled args
 			mustRun(exec.Command("bin/devsy", "workspace", "delete", "--force", workspaceID))
 		})
 	},
