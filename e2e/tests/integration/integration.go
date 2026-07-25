@@ -16,8 +16,6 @@ import (
 	"github.com/onsi/gomega"
 )
 
-// providerBinary returns the goreleaser-built provider binary for this host.
-// The provider is darwin-only, so the e2e suite runs on macOS.
 func providerBinary() string {
 	archDir := map[string]string{"amd64": "amd64_v1", "arm64": "arm64_v8.0"}[goruntime.GOARCH]
 	dir := fmt.Sprintf("build_%s_%s", goruntime.GOOS, archDir)
@@ -30,8 +28,6 @@ func mustRun(cmd *exec.Cmd) {
 	gomega.Expect(err).NotTo(gomega.HaveOccurred(), string(out))
 }
 
-// isolateDevsyHome points devsy at a throwaway home so tests never touch the
-// developer's real config and each run starts clean.
 func isolateDevsyHome() {
 	dir, err := os.MkdirTemp("", "devsy-orbstack-e2e-")
 	framework.ExpectNoError(err)
@@ -72,8 +68,6 @@ func setupDevsyCLI() {
 	framework.ExpectNoError(exec.Command(binPath, "--version").Run()) //nolint:gosec // fixed path
 }
 
-// The integration specs exercise manifest generation and provider-binary error
-// handling. They do not require OrbStack to be installed or running.
 var _ = ginkgo.Describe(
 	"devsy provider orbstack integration",
 	ginkgo.Label("integration"),
@@ -114,8 +108,6 @@ var _ = ginkgo.Describe(
 	},
 )
 
-// The vm suite provisions a real OrbStack machine and requires OrbStack, so it
-// is labelled separately from the no-machine integration specs.
 var _ = ginkgo.Describe(
 	"devsy provider orbstack vm lifecycle",
 	ginkgo.Label("vm"),
