@@ -1,3 +1,4 @@
 /dist/
 *.out
 .DS_Store
+/e2e/bin/
