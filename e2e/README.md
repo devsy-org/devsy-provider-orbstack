@@ -7,7 +7,10 @@ darwin-only):
   generation, option validation, provider-binary error handling). It does not
   require OrbStack to be installed or running.
 - `vm` provisions a real OrbStack machine and runs a full workspace lifecycle.
-  It requires OrbStack (`orbctl` on `PATH`, OrbStack running).
+  It requires OrbStack (`orbctl` on `PATH`, OrbStack running). This label does
+  not run in CI: OrbStack cannot start on GitHub-hosted macOS runners (they lack
+  the Apple Virtualization capability it needs). Run it on a real Mac or a
+  self-hosted macOS runner.
 
 ### Run
 
