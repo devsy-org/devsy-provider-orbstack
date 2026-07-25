@@ -1,0 +1,17 @@
+version: 2
+project_name: devsy-provider-orbstack
+builds:
+  - id: build
+    goos: [darwin]
+    goarch: [amd64, arm64]
+    env:
+      - CGO_ENABLED=0
+    ldflags: -s -w -X main.build={{ .Version }} -X main.commit={{ .Commit }} -X main.date={{ .Date }}
+    binary: "{{ .ProjectName }}-{{ .Os }}-{{ .Arch }}"
+checksum:
+  name_template: checksums.txt
+  algorithm: sha256
+archives:
+  - id: default
+    formats: ["binary"]
+    name_template: "{{ .Binary }}"
