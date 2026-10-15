@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/devsy-org/devsy-provider-orbstack/compare/v1.1.1...v1.1.2) (2026-10-15)
+
+
+### Bug Fixes
+
+* **deps:** update module github.com/onsi/ginkgo/v2 to v2.33.1 ([#25](https://github.com/devsy-org/devsy-provider-orbstack/issues/25)) ([c64bb3b](https://github.com/devsy-org/devsy-provider-orbstack/commit/c64bb3bfea2a3706fb18c3333d9dbc08624638af))
+
 ## [1.1.1](https://github.com/devsy-org/devsy-provider-orbstack/compare/v1.1.0...v1.1.1) (2026-10-15)
 
 
