@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.3](https://github.com/devsy-org/devsy-provider-orbstack/compare/v1.1.2...v1.1.3) (2026-10-15)
+
+
+### Bug Fixes
+
+* **deps:** update module github.com/onsi/gomega to v1.44.0 ([#27](https://github.com/devsy-org/devsy-provider-orbstack/issues/27)) ([644cc9a](https://github.com/devsy-org/devsy-provider-orbstack/commit/644cc9a44daf85afa6d95206cb9e4f72d077a79a))
+
 ## [1.1.2](https://github.com/devsy-org/devsy-provider-orbstack/compare/v1.1.1...v1.1.2) (2026-10-15)
 
 
