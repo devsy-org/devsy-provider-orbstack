@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.4](https://github.com/devsy-org/devsy-provider-orbstack/compare/v1.1.3...v1.1.4) (2026-10-19)
+
+
+### Bug Fixes
+
+* **deps:** update module github.com/devsy-org/devsy to v1.24.0 ([#33](https://github.com/devsy-org/devsy-provider-orbstack/issues/33)) ([a26c136](https://github.com/devsy-org/devsy-provider-orbstack/commit/a26c136455dd2e073e8a8021b63c02af320dfd00))
+
 ## [1.1.3](https://github.com/devsy-org/devsy-provider-orbstack/compare/v1.1.2...v1.1.3) (2026-10-15)
 
 
