@@ -69,6 +69,17 @@ devsy provider add devsy-org/devsy-provider-orbstack -o ORBSTACK_MEMORY=8G -o OR
 devsy provider set orbstack --option ORBSTACK_ISOLATED=false
 ```
 
+## Logging
+
+Provider diagnostics are written to stderr as JSON by default. Protocol output
+and command streams keep their existing destinations. Set `DEVSY_LOG_LEVEL` to
+`error`, `warn`, `info`, `debug`, or `trace`. The standalone default is `info`;
+Devsy supplies its effective log level when it starts the provider.
+
+Set `DEVSY_LOG_FORMAT` to `json`, `text`, `plain`, or `logfmt` to choose the
+diagnostic format. `auto` selects JSON for the provider process. Invalid values
+stop the provider before it runs a command.
+
 ## Development
 
 ```sh
